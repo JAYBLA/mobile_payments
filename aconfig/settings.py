@@ -40,10 +40,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     
     #MY_APPS
     'main',
+    'accounts',
+    'product',
+
+    #Others
+    'allauth',
+	'allauth.account',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -54,6 +63,17 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+AUTHENTICATION_BACKENDS = [
+	'django.contrib.auth.backends.ModelBackend',
+	'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+ACCOUNT_FORMS = {
+	# Use our custom signup form
+	"signup": "accounts.forms.CustomSignupForm",
+}
+
 
 ROOT_URLCONF = 'aconfig.urls'
 
@@ -105,6 +125,29 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'accounts.CustomUser'
+LOGIN_URL = '/accounts/login/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+ACCOUNT_USER_MODEL_EMAIL_FIELD = 'email'
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+
+ACCOUNT_USERNAME_BLACKLIST =  ['admin','user', 'administrator','master','manager',]
+
+ACCOUNT_USERNAME_MIN_LENGTH = 3
+
+ACCOUNT_CONFIRM_EMAIL_ON_GET = False
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS=7
+
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
+ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 5000
+LOGIN_REDIRECT_URL = '/'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -124,6 +167,31 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+
+if not DEBUG:
+	BASE_URL = config('BASE_URL')
+else:
+	BASE_URL = 'http://127.0.0.1:8000'
+
+
+if not DEBUG:
+	EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+	EMAIL_HOST = config('EMAIL_HOST')
+	EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+	EMAIL_PORT = config('EMAIL_PORT', cast=int)
+	EMAIL_USE_SSL = config('EMAIL_USE_SSL', cast=bool)
+	EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+	DEFAULT_FROM_EMAIL = 'noreply@payments.co.tz'
+	ADMIN_EMAIL = 'admin@payments.co.tz'
+else:
+	DEFAULT_FROM_EMAIL = 'noreply@payments.co.tz'
+	EMAIL_HOST_USER = 'noreply@payments.co.tz'
+	EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+	EMAIL_FILE_PATH = str(BASE_DIR / 'sent_mails')
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap version 5 -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <!-- custom css -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/universal.css' %}">
+    <!-- fontawesome icons -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+      .form-signin{
+        background-color: #185671;
+        color: #fff;
+        border-radius: 10px;
+      }
+
+      .form-signin a{
+        color: #fff;        
+      }
+      .bottom-info{
+        color: #185671;
+      }
+      @media only screen  and (min-width:768px){
+        .back-home-arrow{
+          margin-left: 25%;
+        }
+      }
+
+    </style>
+    <title>Edukea - Login</title>
+</head>
+<body>
+    <div class="content vh100">
+        <div class="row mt-5">
+          <div class="back-home-arrow">
+            <a href="/"><button type="button" class="btn btn-outline bg-blue rounded-circle"><i class="fa fa-arrow-left text-light"></i></button></a>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 bg-light offset-md-4">                
+                <div class="container form-signin mt-2 py-2">
+                    <h2 class="text-center py-2">Login</h2>
+                    {% if form.non_field_errors %}
+                        {% for error in form.non_field_errors %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{error}}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                          </div>  
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="POST" action="{% url 'account_login' %}">{% csrf_token %}
+
+                        <div class="form-group d-grid gap-2">
+                            <div class="mb-2">
+                                <label for="exampleFormControlInput1" class="form-label">Email address or Username</label>
+                                {% render_field form.login class="form-control" placeholder="Email or Username" %}
+                            </div>
+                            
+                            <div class="mb-2">
+                                <label for="exampleFormControlInput1" class="form-label">Password</label>
+                                {% render_field form.password class="form-control" placeholder=form.password.label %}
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <div class="form-check">
+                                        {% render_field form.remember class="form-check-input" type="checkbox" %}
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                          Remember me
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col d-flex justify-content-end">
+                                    <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+                                </div>
+                            </div>
+                             
+                            {% if redirect_field_value %}
+                            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                            {% endif %}
+    
+                            <button type="submit" class="btn bg-dark-blue text-light rounded-pill">Login</button>
+                        </div>
+                    
+                    </form>
+                    <p class="my-3">Don't have an account?  <a class="text-light" href="{% url 'account_signup' %}" style="text-decoration: none;font-style: italic;"> Register</a></p>
+
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+          <div class="bottom-info d-flex justify-content-center align-items-center py-3 text-muted">
+            <p>
+              Home | Privacy | Terms of use               
+            </p>
+          </div>          
+        </div>
+    </div>    
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>    
+</body>
+</html>

@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %} 
+{% load widget_tweaks %}
+{% block title %}{{profile}}{% endblock title %}
+
+{% block stylesheet %}
+<style>
+    .admin-profile-picture{
+        margin-top: -90px;
+        z-index: 100;
+    }
+    .user-profile-content{
+        margin-top: -30px;
+        z-index: 99;
+        border-radius: 30px;
+    }
+
+    .user-profile-content .card{
+        border-radius: 15px;
+    }
+</style>
+{% endblock stylesheet %} 
+
+{% block content %} 
+<div class="row mx-0 ">
+    <section class="profile-hero">
+        <header class="profile-hero-container ">
+            <div class="section-title-heading text-white padding-top-20">
+                <h1>{{user.username |title}}-Profile</h1>
+            </div>   
+        </header>
+    </section>   
+</div>  
+<div class="container">
+    <div class="main-body"> 
+          <div class="row gutters-sm">
+            <div class="col-md-4 mb-3 user-profile-content">
+              <div class="card">
+                <div class="card-body">
+                    <div class="d-flex flex-column align-items-center text-center">
+                        <img src="{{profile.profile_picture.url}}" alt="Admin" class="rounded-circle admin-profile-picture border border-white border-2" width="150" height="150">
+                        <div class="mt-3 user-profile-content">
+                            <h4>{{profile.user.username |title}}</h4>
+                            <p class="text-dark text-primary mb-1">{{profile.bio|safe}}</p>
+                            <p class="text-muted fs-6"><i class="fa fa-map-marker me-2" aria-hidden="true"></i>{{profile.location}}</p>
+                            {% if request.user.is_authenticated %}
+                                {% if user.profile == profile %}
+                                    <a href="{% url 'account:profile_update' user.id %}" class="btn bg-blue text-white mx-3">Edit Profile</a>
+                                {% endif %}
+                        
+                            {% endif %}
+                        </div>
+                        <div class="mt-4 text-center">
+                            <ul class="list-inline">
+                                {% if profile.linkedin_link %}
+                                <li class="list-inline-item"><a href="{{profile.linkedin_link}}" target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i></a> </li>
+                                {% endif %}
+                                {% if profile.twitter_link %}
+                                <li class="list-inline-item"><a href="{{profile.twitter_link}}" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a> </li>
+                                {% endif %}
+                                {% if profile.instagram_link %}
+                                <li class="list-inline-item"><a href="{{profile.instagram_link}}" target="_blank"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                                {% endif %}
+                                {% if profile.facebook_link %}
+                                <li class="list-inline-item"><a href="{{profile.facebook_link}}" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                                {% endif %}
+                                {% if profile.youtube_link %}
+                                <li class="list-inline-item"><a href="{{profile.youtube_link}}" target="_blank"><i class="fa fa-youtube-play" aria-hidden="true"></i></a> </li>
+                                {% endif %}
+                                {% if profile.github_link %}
+                                <li class="list-inline-item"><a href="{{profile.github_link}}" target="_blank"><i class="fa fa-github" aria-hidden="true"></i></a> </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card mb-3 mt-2">
+                    <div class="card-body">
+                        <form method="POST" action="." enctype="multipart/form-data">{% csrf_token %}
+                            
+                            <div class="row">
+                                <div class="col-lg-2 text-center">
+                                    <img class="image-circle rounded-circle" src="{{user.profile.profile_picture.url}}" alt="profile" style="width: 80px;height: 80px;">
+                                </div>
+                                <div class="col-lg-10">
+                                    <label for=""><b>Profile Picture</b></label>
+                                    {% render_field form.profile_picture class="form-control mt-2" placeholder="" %}
+                                </div>
+                            </div>
+                            <div class="mb-3 mt-4">
+                                <label class="mb-2 me-4" for=""><b>Bio</b></label>
+                                {% render_field form.bio class="form-control" placeholder="Write a short bio......" %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="mb-2" for=""><b>Website</b></label>
+                                {% render_field form.website class="form-control" placeholder="" %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="mb-2" for=""><b>Country</b></label>
+                                {% render_field form.country class="form-control" placeholder="" %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="mb-2" for=""><b>Location</b></label>
+                                {% render_field form.location class="form-control" placeholder="" %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="mb-2 me-4" for=""><b>Do you agree your email to be desplayed on your public profile?</b></label>
+                                {% render_field form.display_email class="radio" placeholder="" %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="mb-2 me-4" for=""><b>Youtube Link</b></label>
+                                {% render_field form.youtube_link class="form-control" placeholder="" %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="mb-2 me-4" for=""><b>Facebook Link</b></label>
+                                {% render_field form.facebook_link class="form-control" placeholder="" %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="mb-2 me-4" for=""><b>Instagram Link</b></label>
+                                {% render_field form.instagram_link class="form-control" placeholder="" %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="mb-2 me-4" for=""><b>Linkedin Link</b></label>
+                                {% render_field form.linkedin_link class="form-control" placeholder="" %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="mb-2 me-4" for=""><b>Twitter Link</b></label>
+                                {% render_field form.twitter_link class="form-control" placeholder="" %}
+                            </div>
+
+                            <div class="d-grid gap-2 col-8 mx-auto py-4">
+                                <button class="btn bg-blue py-2 text-white" type="submit">Save Profile</button>
+                            </div>
+                            
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+{% endblock %} 
+
+{% block javascript %} {% endblock javascript %}
