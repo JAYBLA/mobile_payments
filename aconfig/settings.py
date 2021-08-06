@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     #Others
     'allauth',
 	'allauth.account',
+    'allauth.socialaccount',
+    'widget_tweaks',
 ]
 
 SITE_ID = 1
@@ -167,7 +169,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
+if not DEBUG:
+	STATIC_ROOT = '/home/edukeaco/public_html/static/'
+	MEDIA_URL = '/media/'
+	MEDIA_ROOT = [BASE_DIR / 'media']
+else:
+	MEDIA_ROOT = 'media/'
 
 
 if not DEBUG:

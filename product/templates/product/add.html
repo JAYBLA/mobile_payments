@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+
+{% block content %}
+<main>
+    <div class="container py-4">  
+      <div class="row align-items-md-stretch">
+        <div class="col-md-6 mt-3">
+            <div class="h-100 p-5 bg-light border rounded-3">
+              <h2>Add Product</h2>
+              <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card">
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Product Name</label>
+                      {% render_field form.name class="form-control" placeholder="Enter product name..." %}
+                      {% for error in field.form.name.errors %}
+                      <span class="help-block">{{ error }}</span>
+                      {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Quantity</label>
+                      {% render_field form.quantity class="form-control" %}
+                      {% for error in field.form.quantity.errors %}
+                      <span class="help-block">{{ error }}</span>
+                      {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Price</label>
+                      {% render_field form.price class="form-control" %}
+                      {% for error in field.form.price.errors %}
+                      <span class="help-block">{{ error }}</span>
+                      {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Product Image</label>
+                      {% render_field form.thumbnail class="form-control" %}
+                      {% for error in field.form.thumbnail.errors %}
+                      <span class="help-block">{{ error }}</span>
+                      {% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </div>
+                </div>
+              </form>        
+            </div>
+          </div>
+        <div class="col-md-6 mt-3">
+          <div class="h-100 p-5 bg-light border rounded-3">
+            <h2>Products List</h2>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">S/N</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Price</th>
+                  </tr>
+                </thead>
+                <tbody>                  
+                  {% for p in products %}
+                  <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{p.name}}</td>
+                    <td>{{p.quantity}}</td>
+                    <td>{{p.price}}</td>
+                  </tr>
+                  {% endfor %}                  
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>  
+      <footer class="pt-3 mt-4 text-muted border-top">
+        &copy; <script>document.write(new Date().getFullYear())</script>
+      </footer>
+    </div>
+  </main>
+{% endblock content %}
+
+
+{% block javascript %}
+{% endblock javascript %}
+    
+    
